@@ -1,0 +1,29 @@
+version: '2'
+
+vars:
+  BUILD_DIR: build
+  DOCKER_REPO: electricui/github-release-resource
+
+tasks:
+  docker:
+    desc: Build docker image under dev tag.
+    cmds:
+    - docker build -t {{.DOCKER_REPO}}:dev dockerfiles/alpine/Dockerfile .
+
+  build:
+    desc: Build check/in/out artifacts
+    cmds:
+    - task: go-build
+      vars: {BINARY: check}
+    - task: go-build
+      vars: {BINARY: in}
+    - task: go-build
+      vars: {BINARY: out}
+
+  go-build:
+    cmds:
+    - go build -o {{.BUILD_DIR}}/{{.BINARY}}{{exeExt}} -ldflags="-s -w" -v ./cmd/{{.BINARY}}/{{.BINARY}}.go
+    env:
+      CGO_ENABLED: '0'
+      GOOS: '{{OS}}'
+      GOARCH: '{{ARCH}}'

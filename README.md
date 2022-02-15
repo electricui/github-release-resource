@@ -207,3 +207,7 @@ docker build -t github-release-resource -f dockerfiles/ubuntu/Dockerfile .
 
 Please make all pull requests to the `master` branch and ensure tests pass
 locally.
+
+### To build for eui
+
+`docker build -t electricui/github-release-resource .`
